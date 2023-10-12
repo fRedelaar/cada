@@ -38,13 +38,13 @@ class cada():
 			if len(comms) > 0:
 				# The number of communities it is connected to. 
 				comms = np.array(list(comms.values()))
-				# print('nr communities connected', comms)
+				print('nr communities connected', comms)
 				max_com = np.max(comms)
-				# print('Maxcommunity', max_com)
+				print('Maxcommunity', max_com)
 				comms = comms / max_com
-				# print('Communities normalized', comms)
+				print('Communities normalized', comms)
 				anom_score[node] = np.sum(comms)		
-				# print('Anomaly score., ', anom_score[node])
+				print('Anomaly score., ', anom_score[node])
 
 		self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
 
@@ -78,7 +78,7 @@ class cada():
 
 	def get_top_anomalies(self, nr_anomalies=100):
 		"""
-		Returns highest scoring anomalies
+		Returns the highest scoring anomalies
 		"""					
 		anomalies = []
 		for anomaly in self.anomaly_scores[:nr_anomalies]:
