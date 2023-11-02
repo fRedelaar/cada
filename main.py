@@ -30,11 +30,12 @@ def evaluate_dataset(dataset_name, file_path, threshold):
     cada_instance = cada(graph, algorithm='louvain', resolution=0.1)
     anomalies = cada_instance.get_anomalies_threshold(threshold=threshold)
 
+    # Get labeled nodes from dataset
     labeled_nodes = [node for node in graph.nodes if graph.nodes[node]['Label'] == 1]
 
+    # Calculate the number of anomalies detected by CADA that are also labeled as anomalous in the dataset
     yes_count = sum(1 for element in anomalies if element in labeled_nodes)
     no_count = len(anomalies) - yes_count
-
     total_count = len(anomalies)
     percentage_yes = (yes_count / total_count) * 100
     percentage_no = (no_count / total_count) * 100
