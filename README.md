@@ -1,7 +1,17 @@
-# CADA
+# Node Anomaly Detection project for SNACS
+This repository contains code for the Social Network Analysis for Computer Scientists (SNACS) 2023/2024 project at Leiden University. 
+For this project we have used the CADA algorithm [1] to detect node anomalies in labelled real world networks. 
+Futhermore, we have implemented a third out-of-the-box community detection algorithm, namely ... . 
+
+## Getting Started
+To get started and use the code in this repository, you need to have Python 3.7 or higher installed.
+
+
+
+# CADA (Original repository)
 Community-aware detection of anomalies [1]
 
-This is the code for detecting node anomalies in networks with NetworkX by including community structure from two out-of-the-box community detection algorithm: (1) Louvain [1], and (2) Infomap [2]. The algorithm is described <a href="https://link.springer.com/chapter/10.1007/978-3-030-05411-3_20">here</a>. 
+This is the code for detecting node anomalies in networks with NetworkX by including community structure from two out-of-the-box community detection algorithms: (1) Louvain [2], and (2) Infomap [3]. The algorithm is described <a href="https://link.springer.com/chapter/10.1007/978-3-030-05411-3_20">here</a>. 
 
 For (1), Python package <a href="https://github.com/taynaud/python-louvain">Python-Louvain</a> is used. 
 

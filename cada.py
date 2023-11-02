@@ -1,12 +1,13 @@
+# Original code by Thomas Helling
+# Source: https://github.com/thomashelling/cada
+# Modified by Felicia Redelaar (s1958410) and Louka Wijne (s2034697) for SNACS
+# SNACS: Social Network Analysis for Computer Scientists
+# Leiden University, 2023 - 2023.
+
 # coding=utf-8
 
-from math import sqrt
-
-import networkx as nx
-import random
 import numpy as np
 import community
-import time
 import infomap
 
 class cada():
@@ -38,13 +39,13 @@ class cada():
 			if len(comms) > 0:
 				# The number of communities it is connected to. 
 				comms = np.array(list(comms.values()))
-				print('nr communities connected', comms)
+				# print('nr communities connected', comms)
 				max_com = np.max(comms)
-				print('Maxcommunity', max_com)
+				# print('Maxcommunity', max_com)
 				comms = comms / max_com
-				print('Communities normalized', comms)
+				# print('Communities normalized', comms)
 				anom_score[node] = np.sum(comms)		
-				print('Anomaly score., ', anom_score[node])
+				# print('Anomaly score., ', anom_score[node])
 
 		self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
 
