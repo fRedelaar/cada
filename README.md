@@ -1,11 +1,25 @@
 # Node Anomaly Detection project for SNACS
 This repository contains code for the Social Network Analysis for Computer Scientists (SNACS) 2023/2024 project at Leiden University. 
-For this project we have used the CADA algorithm [1] to detect node anomalies in labelled real world networks. 
-Futhermore, we have implemented a third out-of-the-box community detection algorithm, namely ... . 
+For this project, we have used the CADA algorithm [1] to detect node anomalies in labelled real world networks. 
+Furthermore, we have implemented a third out-of-the-box community detection algorithm, namely ... . 
+
+
+The code in this repository is based on the code from the original CADA repository, which can be found [here](https://github.com/thomashelling/cada).
+
 
 ## Getting Started
-To get started and use the code in this repository, you need to have Python 3.7 or higher installed.
+To get started and use the code in this repository, you need to have Python 3.9 or higher installed, since this is a requirement of NetworkX. 
 
+### Installation
+To install the required packages, run the following command in the root directory of this repository:
+```
+pip install -r requirements.txt
+```
+
+
+## Authors of SNACS project
+- Louka Wijne (s2034697)
+- Felicia Redelaar (s1958410)
 
 
 # CADA (Original repository)
