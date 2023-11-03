@@ -2,7 +2,7 @@
 # Source: https://github.com/thomashelling/cada
 # Modified by Felicia Redelaar (s1958410) and Louka Wijne (s2034697) for SNACS
 # SNACS: Social Network Analysis for Computer Scientists
-# Leiden University, 2023 - 2023.
+# Leiden University, 2023 - 2024.
 
 # coding=utf-8
 

@@ -1,6 +1,6 @@
 # Original code by Felicia Redelaar (s1958410) and Louka Wijne (s2034697) for SNACS
 # SNACS: Social Network Analysis for Computer Scientists
-# Leiden University, 2023 - 2023.
+# Leiden University, 2023 - 2024.
 
 """
 main.py
@@ -40,11 +40,21 @@ def evaluate_dataset(dataset_name, file_path, threshold):
     percentage_yes = (yes_count / total_count) * 100
     percentage_no = (no_count / total_count) * 100
 
+    # TODO: implement weighted F-1 score; low score is fine. Its a lot better than random!
+    # weighted since every run of Louvain produces different results.. so we could run it 10x for example.
+    # maybe do top-X instead of threshold..? check which gives better results.
+    # Amazon for example is 4% labelled as anomalous, so if CADA gets 30% correct its quite good
+    # Also, maybe the anomalies in the dataset might not be network based thus imposible to find with CADA
+
+    # TODO: maybe print out modularity score of the community detection algorithm? (Louvain)
+    # So we can see the quality of the community detection algorithm
+
     # Print results
     # The yes count is the number of anomalies detected by CADA that are also labeled as anomalous in the dataset
     print(f"Number of anomalous labeled nodes in {dataset_name}: {len(labeled_nodes)}")
     print(f"Yes count: {yes_count} ({percentage_yes:.2f}%)")
     print(f"No count: {no_count} ({percentage_no:.2f}%)")
+    print("Number of anomalies detected by CADA:", len(anomalies))
     print("Anomalies detected by CADA:", anomalies)
     print("------------------------------------------------------")
 
@@ -53,9 +63,14 @@ def evaluate_dataset(dataset_name, file_path, threshold):
 if __name__ == "__main__":
     datasets = {
         "Amazon": ('data/node-level-anom/Amazon/Amazon.mat', 5),
-        "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 2),
-        "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 2),
-        "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 2)
+        "Amazon2": ('data/node-level-anom/Amazon/Amazon.mat', 5),
+        "Amazon3": ('data/node-level-anom/Amazon/Amazon.mat', 4),
+        "Amazon4": ('data/node-level-anom/Amazon/Amazon.mat', 4),
+        "Amazon5": ('data/node-level-anom/Amazon/Amazon.mat', 3),
+        "Amazon6": ('data/node-level-anom/Amazon/Amazon.mat', 3),
+        # "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 2),
+        # "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 2),
+        # "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 2)
     }
 
     for dataset_name, (file_path, threshold) in datasets.items():
