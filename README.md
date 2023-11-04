@@ -21,7 +21,7 @@ pip install -r requirements.txt
 - [x] Setup evaluation framework
 - [x] Implement (weighted) F1-score
 - [x] Tune threshold parameter for the 4 datasets
-- [x] Calculate anomalies with CADA, make sure it works with:
+- [ ] Get results of (un)weighted F1 for CADA for the 4 datasets
   - [x] Louvain
   - [ ] Infomap
   - [ ] Third algorithm
