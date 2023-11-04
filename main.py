@@ -15,9 +15,10 @@ Source of datasets: https://github.com/QZ-WANG/ACT/tree/main
 from matfile_reader import MatFileReader
 from graph_statistics import GraphStatistics
 from cada import cada
+from sklearn.metrics import f1_score, precision_score, recall_score
 
 
-def evaluate_dataset(dataset_name, file_path, threshold):
+def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     print(f"Evaluating {dataset_name} dataset...")
     mat_file_reader = MatFileReader(file_path)
     graph = mat_file_reader.get_graph()
@@ -26,36 +27,61 @@ def evaluate_dataset(dataset_name, file_path, threshold):
     graph_statistics = GraphStatistics(graph)
     graph_statistics.display_statistics(dataset_name)
 
-    # Perform community detection and anomaly detection
-    cada_instance = cada(graph, algorithm='louvain', resolution=0.1)
-    anomalies = cada_instance.get_anomalies_threshold(threshold=threshold)
+    total_yes_count = 0
+    total_no_count = 0
+    total_total_count = 0
+    y_true = []  # True labels
+    y_pred = []  # Predicted labels
 
-    # Get labeled nodes from dataset
-    labeled_nodes = [node for node in graph.nodes if graph.nodes[node]['Label'] == 1]
+    for run in range(num_runs):
+        # Perform community detection and anomaly detection
+        cada_instance = cada(graph, algorithm='louvain', resolution=0.1)
+        anomalies = cada_instance.get_anomalies_threshold(threshold=threshold)
 
-    # Calculate the number of anomalies detected by CADA that are also labeled as anomalous in the dataset
-    yes_count = sum(1 for element in anomalies if element in labeled_nodes)
-    no_count = len(anomalies) - yes_count
-    total_count = len(anomalies)
-    percentage_yes = (yes_count / total_count) * 100
-    percentage_no = (no_count / total_count) * 100
+        # Get labeled nodes from dataset
+        labeled_nodes = [node for node in graph.nodes if graph.nodes[node]['Label'] == 1]
 
-    # TODO: implement weighted F-1 score; low score is fine. Its a lot better than random!
-    # weighted since every run of Louvain produces different results.. so we could run it 10x for example.
-    # maybe do top-X instead of threshold..? check which gives better results.
-    # Amazon for example is 4% labelled as anomalous, so if CADA gets 30% correct its quite good
-    # Also, maybe the anomalies in the dataset might not be network based thus imposible to find with CADA
+        # Calculate the number of anomalies detected by CADA that are also labeled as anomalous in the dataset
+        yes_count = sum(1 for element in anomalies if element in labeled_nodes)
+        no_count = len(anomalies) - yes_count
+        total_count = len(anomalies)
 
-    # TODO: maybe print out modularity score of the community detection algorithm? (Louvain)
-    # So we can see the quality of the community detection algorithm
+        total_yes_count += yes_count
+        total_no_count += no_count
+        total_total_count += total_count
 
-    # Print results
-    # The yes count is the number of anomalies detected by CADA that are also labeled as anomalous in the dataset
+        y_true.extend([1 if node in labeled_nodes else 0 for node in graph.nodes])
+        y_pred.extend([1 if node in anomalies else 0 for node in graph.nodes])
+
+    # Calculate unweighted F1 score
+    f1 = f1_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+
+    # Calculate weighted F1 score
+    weighted_f1 = f1_score(y_true, y_pred, average='weighted')
+    weighted_precision = precision_score(y_true, y_pred, average='weighted')
+    weighted_recall = recall_score(y_true, y_pred, average='weighted')
+
+    avg_yes_count = total_yes_count / num_runs
+    avg_no_count = total_no_count / num_runs
+    avg_total_count = total_total_count / num_runs
+    avg_percentage_yes = (avg_yes_count / avg_total_count) * 100
+    avg_percentage_no = (avg_no_count / avg_total_count) * 100
+
+    # Print results, including weighted F1 score
     print(f"Number of anomalous labeled nodes in {dataset_name}: {len(labeled_nodes)}")
-    print(f"Yes count: {yes_count} ({percentage_yes:.2f}%)")
-    print(f"No count: {no_count} ({percentage_no:.2f}%)")
-    print("Number of anomalies detected by CADA:", len(anomalies))
-    print("Anomalies detected by CADA:", anomalies)
+    print(f"Avg Yes count: {avg_yes_count:.2f} ({avg_percentage_yes:.2f}%)")
+    print(f"Avg No count: {avg_no_count:.2f} ({avg_percentage_no:.2f}%)")
+    print(f"Number of anomalies detected by CADA (Average of {num_runs} runs): {avg_total_count:.2f}")
+    print("---------UNWEIGHTED RESULTS----------------")
+    print(f"Unweighted F1 Score: {f1:.2f}")
+    print(f"Unweighted Precision: {precision:.2f}")
+    print(f"Unweighted Recall: {recall:.2f}")
+    print("---------WEIGHTED RESULTS------------------")
+    print(f"Weighted F1 Score: {weighted_f1:.2f}")
+    print(f"Weighted Precision: {weighted_precision:.2f}")
+    print(f"Weighted Recall: {weighted_recall:.2f}")
     print("------------------------------------------------------")
 
 
@@ -63,15 +89,10 @@ def evaluate_dataset(dataset_name, file_path, threshold):
 if __name__ == "__main__":
     datasets = {
         "Amazon": ('data/node-level-anom/Amazon/Amazon.mat', 5),
-        "Amazon2": ('data/node-level-anom/Amazon/Amazon.mat', 5),
-        "Amazon3": ('data/node-level-anom/Amazon/Amazon.mat', 4),
-        "Amazon4": ('data/node-level-anom/Amazon/Amazon.mat', 4),
-        "Amazon5": ('data/node-level-anom/Amazon/Amazon.mat', 3),
-        "Amazon6": ('data/node-level-anom/Amazon/Amazon.mat', 3),
-        # "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 2),
-        # "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 2),
-        # "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 2)
+        "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 2),
+        "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 2),
+        "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 2)
     }
 
     for dataset_name, (file_path, threshold) in datasets.items():
-        evaluate_dataset(dataset_name, file_path, threshold)
+        evaluate_dataset(dataset_name, file_path, threshold, num_runs=3)
