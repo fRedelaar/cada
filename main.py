@@ -85,14 +85,13 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     print("------------------------------------------------------")
 
 
-# TODO: Tune thresholds for each dataset
 if __name__ == "__main__":
     datasets = {
         "Amazon": ('data/node-level-anom/Amazon/Amazon.mat', 5),
-        "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 2),
-        "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 2),
-        "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 2)
+        "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 3.5),
+        "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 3.5),
+        "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 3)
     }
 
     for dataset_name, (file_path, threshold) in datasets.items():
-        evaluate_dataset(dataset_name, file_path, threshold, num_runs=3)
+        evaluate_dataset(dataset_name, file_path, threshold, num_runs=5)
