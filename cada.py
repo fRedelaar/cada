@@ -10,7 +10,7 @@ class cada():
             partition = community.best_partition(graph, resolution=resolution, weight=weight_attribute)
 
         elif algorithm == 'infomap':
-            partition = self.run_infomap(graph)
+            partition = self.run_infomap(graph, weight_attribute)
 
         elif algorithm == 'label_propagation':
             partition = self.run_label_propagation(graph)
@@ -36,14 +36,16 @@ class cada():
 
         self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
 
-    def run_infomap(self, graph):
+    def run_infomap(self, graph, weight_attribute):
         """
         Runs Infomap with infomap package
         """
         infomapSimple = infomap.Infomap("--two-level --silent")
 
-        for e in graph.edges():
-            infomapSimple.addLink(int(e[0]), int(e[1]))
+        for e in graph.edges(data=True):
+            source, target, data = e
+            weight = data.get(weight_attribute, 1.0)  # Default weight is 1.0 if attribute is not present
+            infomapSimple.addLink(int(source), int(target), weight)
 
         infomapSimple.run()
 

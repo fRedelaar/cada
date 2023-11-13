@@ -26,9 +26,9 @@ pip install -r requirements.txt
   - [x] Infomap
   - [x] LPA
 - [x] Add third community detection algorithm - LPA
-- [ ] Add weighted/unweighted option
+- [ ] Add weighted option
   - [x] Louvain
-  - [ ] Infomap
+  - [x] Infomap
   - [ ] LPA
 
 ## Authors of SNACS project
