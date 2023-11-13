@@ -24,8 +24,8 @@ pip install -r requirements.txt
 - [ ] Get results of (un)weighted F1 for CADA for the 4 datasets
   - [x] Louvain
   - [x] Infomap
-  - [ ] LPA
-- [ ] Add third community detection algorithm - LPA
+  - [x] LPA
+- [x] Add third community detection algorithm - LPA
 - [ ] Add weighted/unweighted option
 
 ## Authors of SNACS project

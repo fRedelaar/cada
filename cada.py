@@ -1,12 +1,7 @@
-# Original code by Thomas Helling
-# Source: https://github.com/thomashelling/cada
-# Modified by Felicia Redelaar (s1958410) and Louka Wijne (s2034697) for SNACS
-# SNACS: Social Network Analysis for Computer Scientists
-# Leiden University, 2023 - 2024.
-
 import numpy as np
 import community
 import infomap
+import networkx as nx
 
 class cada():
     def __init__(self, graph, algorithm='louvain', resolution=0.1):
@@ -14,46 +9,30 @@ class cada():
         if algorithm == 'louvain':
             partition = community.best_partition(graph, resolution=resolution)
 
-            # Version for Louvain
-            anom_score = {}
-            for node in graph.nodes():
-                comms = {}
-                for neighbor in graph.neighbors(node):
-                    if neighbor != node:
-                        if partition[neighbor] not in comms:
-                            comms[partition[neighbor]] = 0
-
-                        comms[partition[neighbor]] += 1
-
-                if len(comms) > 0:
-                    comms = np.array(list(comms.values()))
-                    max_com = np.max(comms)
-                    comms = comms / max_com
-                    anom_score[node] = np.sum(comms)
-                    # print('Anomaly score., ', anom_score[node], 'Node', node)
-
-        else:
+        elif algorithm == 'infomap':
             partition = self.run_infomap(graph)
 
-            # Altered version for Infomap
-            anom_score = {}
-            for node in graph.nodes():
-                comms = {}
-                for neighbor in graph.neighbors(node):
-                    if neighbor != node:
-                        neighbor_key = int(neighbor)  # Convert neighbor to the appropriate type
-                        if neighbor_key in partition:
-                            if partition[neighbor_key] not in comms:
-                                comms[partition[neighbor_key]] = 0
+        elif algorithm == 'label_propagation':
+            partition = self.run_label_propagation(graph)
 
-                            comms[partition[neighbor_key]] += 1
+        else:
+            raise ValueError("Invalid algorithm. Choose 'louvain', 'infomap', or 'label_propagation'.")
 
-                if len(comms) > 0:
-                    comms = np.array(list(comms.values()))
-                    max_com = np.max(comms)
-                    comms = comms / max_com
-                    anom_score[node] = np.sum(comms)
-                    # print('Anomaly score., ', anom_score[node], 'Node', node)
+        anom_score = {}
+        for node in graph.nodes():
+            comms = {}
+            for neighbor in graph.neighbors(node):
+                if neighbor != node:
+                    if partition[neighbor] not in comms:
+                        comms[partition[neighbor]] = 0
+
+                    comms[partition[neighbor]] += 1
+
+            if len(comms) > 0:
+                comms = np.array(list(comms.values()))
+                max_com = np.max(comms)
+                comms = comms / max_com
+                anom_score[node] = np.sum(comms)
 
         self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
 
@@ -75,6 +54,14 @@ class cada():
 
         return partition
 
+    def run_label_propagation(self, graph):
+        """
+        Runs Label Propagation Algorithm with NetworkX
+        """
+        partition = nx.algorithms.community.label_propagation.label_propagation_communities(graph)
+        partition = {node: comm_index for comm_index, community in enumerate(partition) for node in community}
+        return partition
+
     def get_anomaly_scores(self, nr_anomalies=None):
         """
         Returns tuple (node, anomaly_score) for either nr_anomalies or all
@@ -88,22 +75,12 @@ class cada():
         """
         Returns the highest scoring anomalies
         """
-        anomalies = []
-        for anomaly in self.anomaly_scores[:nr_anomalies]:
-            anomalies.append(anomaly[0])
-
+        anomalies = [anomaly[0] for anomaly in self.anomaly_scores[:nr_anomalies]]
         return anomalies
 
     def get_anomalies_threshold(self, threshold):
         """
         Returns anomalies that are above a certain threshold.
         """
-        anomalies = []
-
-        for anomaly in self.anomaly_scores:
-            if anomaly[1] > threshold:
-                anomalies.append(anomaly[0])
-            else:
-                break
-
+        anomalies = [anomaly[0] for anomaly in self.anomaly_scores if anomaly[1] > threshold]
         return anomalies

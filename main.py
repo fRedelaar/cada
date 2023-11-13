@@ -66,8 +66,13 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     avg_yes_count = total_yes_count / num_runs
     avg_no_count = total_no_count / num_runs
     avg_total_count = total_total_count / num_runs
-    avg_percentage_yes = (avg_yes_count / avg_total_count) * 100
-    avg_percentage_no = (avg_no_count / avg_total_count) * 100
+    avg_percentage_yes = 0  # Default value
+    if avg_total_count != 0:
+        avg_percentage_yes = (avg_yes_count / avg_total_count) * 100
+
+    avg_percentage_no = 0  # Default value
+    if avg_total_count != 0:
+        avg_percentage_no = (avg_no_count / avg_total_count) * 100
 
     # Print results, including weighted F1 score
     print(f"Number of anomalous labeled nodes in {dataset_name}: {len(labeled_nodes)}")
