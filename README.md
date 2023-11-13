@@ -19,14 +19,14 @@ pip install -r requirements.txt
 - [x] Read and process data
 - [x] Calculate graph statistics
 - [x] Setup evaluation framework
-- [x] Calculate anomalies with CADA, make sure it works with:
+- [x] Implement (weighted) F1-score
+- [x] Tune threshold parameter for the 4 datasets
+- [ ] Get results of (un)weighted F1 for CADA for the 4 datasets
   - [x] Louvain
   - [ ] Infomap
   - [ ] Third algorithm
 - [ ] Add third community detection algorithm
 - [ ] Add weighted/unweighted option
-- [ ] Tune threshold parameter for the 4 communities
-- [ ] Tune Louvain parameter
 
 ## Authors of SNACS project
 - Louka Wijne (s2034697)
