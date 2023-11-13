@@ -4,101 +4,106 @@
 # SNACS: Social Network Analysis for Computer Scientists
 # Leiden University, 2023 - 2024.
 
-# coding=utf-8
-
 import numpy as np
 import community
 import infomap
 
 class cada():
-	def __init__(self, graph, algorithm='louvain', resolution=0.1):
-		
-		# First do community detection
-		if algorithm == 'louvain':
-			partition = community.best_partition(graph, resolution=resolution)
-		else:
-			partition = self.run_infomap(graph)
-		
-		communities = set()
-		for node in graph.nodes():
-			if node in partition:
-				communities.add(partition[node])
+    def __init__(self, graph, algorithm='louvain', resolution=0.1):
+        # First do community detection
+        if algorithm == 'louvain':
+            partition = community.best_partition(graph, resolution=resolution)
 
-		anom_score = {}
+            # Version for Louvain
+            anom_score = {}
+            for node in graph.nodes():
+                comms = {}
+                for neighbor in graph.neighbors(node):
+                    if neighbor != node:
+                        if partition[neighbor] not in comms:
+                            comms[partition[neighbor]] = 0
 
-		# Compute anomaly score for each node
-		for node in graph.nodes():
-			comms = {}
-			for neighbor in graph.neighbors(node):
-				if neighbor != node:
-					if partition[neighbor] not in comms:
-						comms[partition[neighbor]] = 0
+                        comms[partition[neighbor]] += 1
 
-					comms[partition[neighbor]] += 1
+                if len(comms) > 0:
+                    comms = np.array(list(comms.values()))
+                    max_com = np.max(comms)
+                    comms = comms / max_com
+                    anom_score[node] = np.sum(comms)
+                    # print('Anomaly score., ', anom_score[node], 'Node', node)
 
-			if len(comms) > 0:
-				# The number of communities it is connected to. 
-				comms = np.array(list(comms.values()))
-				# print('nr communities connected', comms)
-				max_com = np.max(comms)
-				# print('Maxcommunity', max_com)
-				comms = comms / max_com
-				# print('Communities normalized', comms)
-				anom_score[node] = np.sum(comms)		
-				# print('Anomaly score., ', anom_score[node])
+        else:
+            partition = self.run_infomap(graph)
 
-		self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
+            # Altered version for Infomap
+            anom_score = {}
+            for node in graph.nodes():
+                comms = {}
+                for neighbor in graph.neighbors(node):
+                    if neighbor != node:
+                        neighbor_key = int(neighbor)  # Convert neighbor to the appropriate type
+                        if neighbor_key in partition:
+                            if partition[neighbor_key] not in comms:
+                                comms[partition[neighbor_key]] = 0
 
+                            comms[partition[neighbor_key]] += 1
 
-	def run_infomap(self, graph):
-		"""
-		Runs Infomap with infomap package 
-		"""
-		infomapSimple = infomap.Infomap("--two-level --silent")
-		network = infomapSimple.network()
-		
-		for e in graph.edges():
-			network.addLink(e[0], e[1])
+                if len(comms) > 0:
+                    comms = np.array(list(comms.values()))
+                    max_com = np.max(comms)
+                    comms = comms / max_com
+                    anom_score[node] = np.sum(comms)
+                    # print('Anomaly score., ', anom_score[node], 'Node', node)
 
-		partition = {}
-		infomapSimple.run();
-		for node in infomapSimple.iterTree():
-			if node.isLeaf():
-				partition[node.physicalId] = node.moduleIndex()
+        self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
 
-		return partition
+    def run_infomap(self, graph):
+        """
+        Runs Infomap with infomap package
+        """
+        infomapSimple = infomap.Infomap("--two-level --silent")
 
-	def get_anomaly_scores(self, nr_anomalies=None):
-		"""
-		Returns tuple (node, anomaly_score) for either nr_anomalies or all
-		"""
-		if nr_anomalies:
-			return self.anomaly_scores[:nr_anomalies]
-		else:
-			return self.anomaly_scores 
+        for e in graph.edges():
+            infomapSimple.addLink(int(e[0]), int(e[1]))
 
-	def get_top_anomalies(self, nr_anomalies=100):
-		"""
-		Returns the highest scoring anomalies
-		"""					
-		anomalies = []
-		for anomaly in self.anomaly_scores[:nr_anomalies]:
-			anomalies.append(anomaly[0])
+        infomapSimple.run()
 
-		return anomalies
+        partition = {}
+        for node in infomapSimple.iterTree():
+            if node.isLeaf():
+                partition[node.physicalId] = node.moduleIndex()
 
-	def get_anomalies_threshold(self, threshold):
-		"""
-		Returns anomalies that are above a certain threshold.
-		"""
-		anomalies = []
+        return partition
 
-		for anomaly in self.anomaly_scores:
-			if anomaly[1] > threshold:
-				anomalies.append(anomaly[0])
-			else:
-				break
+    def get_anomaly_scores(self, nr_anomalies=None):
+        """
+        Returns tuple (node, anomaly_score) for either nr_anomalies or all
+        """
+        if nr_anomalies:
+            return self.anomaly_scores[:nr_anomalies]
+        else:
+            return self.anomaly_scores
 
-		return anomalies
+    def get_top_anomalies(self, nr_anomalies=100):
+        """
+        Returns the highest scoring anomalies
+        """
+        anomalies = []
+        for anomaly in self.anomaly_scores[:nr_anomalies]:
+            anomalies.append(anomaly[0])
 
+        return anomalies
 
+    def get_anomalies_threshold(self, threshold):
+        """
+        Returns anomalies that are above a certain threshold.
+        """
+        anomalies = []
+
+        for anomaly in self.anomaly_scores:
+            if anomaly[1] > threshold:
+                anomalies.append(anomaly[0])
+            else:
+                break
+
+        return anomalies
