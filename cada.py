@@ -4,10 +4,10 @@ import infomap
 import networkx as nx
 
 class cada():
-    def __init__(self, graph, algorithm='louvain', resolution=0.1):
+    def __init__(self, graph, algorithm='louvain', resolution=0.1, weight_attribute='Attributes'):
         # First do community detection
         if algorithm == 'louvain':
-            partition = community.best_partition(graph, resolution=resolution)
+            partition = community.best_partition(graph, resolution=resolution, weight=weight_attribute)
 
         elif algorithm == 'infomap':
             partition = self.run_infomap(graph)

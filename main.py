@@ -35,7 +35,7 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
 
     for run in range(num_runs):
         # Perform community detection and anomaly detection
-        cada_instance = cada(graph, algorithm='louvain', resolution=0.1)
+        cada_instance = cada(graph, algorithm='louvain', resolution=0.1, weight_attribute='Attributes')
         anomalies = cada_instance.get_anomalies_threshold(threshold=threshold)
 
         # Get labeled nodes from dataset

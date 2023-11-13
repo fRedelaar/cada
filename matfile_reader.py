@@ -25,8 +25,15 @@ class MatFileReader:
         # Extract the 'Label' data
         label_data = self.data['Label'].flatten()
 
-        # Add the label data as a node attribute# Add 'Label' attribute to graph nodes
+        # Add 'Label' attribute to graph nodes
         for node, label in zip(graph.nodes, label_data):
             graph.nodes[node]['Label'] = label
+
+        # Extract the 'Attributes' data
+        attributes_data = self.data['Attributes']
+
+        # Add 'Attributes' attribute to graph nodes
+        for node, attributes in zip(graph.nodes, attributes_data):
+            graph.nodes[node]['Attributes'] = attributes
 
         return graph
