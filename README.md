@@ -21,15 +21,18 @@ pip install -r requirements.txt
 - [x] Setup evaluation framework
 - [x] Implement (weighted) F1-score
 - [x] Tune threshold parameter for the 4 datasets
+  - [x] Louvain (5, 3.5, 3.5, 3)
+  - [x] Infomap (3.25, 1.75, 4.75, 2.75)
+  - [x] LPA (1.25, 2.5, 1.5, 1.75)
 - [x] Get results of (un)weighted F1 for CADA for the 4 datasets
   - [x] Louvain
   - [x] Infomap
   - [x] LPA
 - [x] Add third community detection algorithm - LPA
-- [ ] Add weighted option
-  - [x] Louvain
-  - [x] Infomap
-  - [ ] LPA
+- [x] ~~Add weighted option --> not part of scope anymore~~
+  - [x] ~~Louvain~~
+  - [ ] ~~Infomap (incorect implementation)~~
+  - [ ] ~~LPA (not built in with networkX)~~
 
 ## Authors of SNACS project
 - Louka Wijne (s2034697)
