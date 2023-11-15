@@ -1,3 +1,9 @@
+# Source: https://github.com/thomashelling/cada
+# Modified by Felicia Redelaar (s1958410) and Louka Wijne (s2034697) for SNACS
+# (Implemented LPA and the Leiden algorithms)
+# SNACS: Social Network Analysis for Computer Scientists
+# Leiden University, 2023 - 2024.
+
 import numpy as np
 import community
 import infomap
