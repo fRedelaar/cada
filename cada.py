@@ -4,6 +4,12 @@
 # SNACS: Social Network Analysis for Computer Scientists
 # Leiden University, 2023 - 2024.
 
+"""
+cada.py
+
+This module was written originally by Thomas Helling et al. This module contains the CADA algorithm for all four variants.
+"""
+
 import numpy as np
 import community
 import infomap

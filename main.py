@@ -24,8 +24,8 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     graph = mat_file_reader.get_graph()
 
     # Calculate and display graph statistics
-    # graph_statistics = GraphStatistics(graph)
-    # graph_statistics.display_statistics(dataset_name)
+    graph_statistics = GraphStatistics(graph)
+    graph_statistics.display_statistics(dataset_name)
 
     total_yes_count = 0
     total_no_count = 0
