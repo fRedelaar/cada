@@ -36,7 +36,7 @@ This will generate statistics for each network, and run the experiments.
 | CADA_LPA | 1.25  | 2.5       | 1.5     | 1.75    |
 | CADA_LEI | 6.5   | 7.25      | 9       | 7.5     |
 
-Table: Threshold table for each **CADA** variant
+Table 1: Threshold table for each **CADA** variant
 
 ## Authors of SNACS project
 - Louka Wijne (s2034697)
