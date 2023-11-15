@@ -35,7 +35,7 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
 
     for run in range(num_runs):
         # Perform community detection and anomaly detection
-        cada_instance = cada(graph, algorithm='label_propagation', resolution=0.1)
+        cada_instance = cada(graph, algorithm='leiden', resolution=0.1)
         anomalies = cada_instance.get_anomalies_threshold(threshold=threshold)
 
         # Get labeled nodes from dataset
@@ -92,11 +92,12 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
 
 if __name__ == "__main__":
     datasets = {
-        "Amazon": ('data/node-level-anom/Amazon/Amazon.mat', 1.25),
-        "YelpHotel": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 2.5),
-        "YelpNYC": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 1.5),
-        "YelpRes": ('data/node-level-anom/YelpRes/YelpRes.mat', 1.75),
+
+        "Amazon6.5": ('data/node-level-anom/Amazon/Amazon.mat', 6.5),
+        "YelpHotel7.25": ('data/node-level-anom/YelpHotel/YelpHotel.mat', 7.25),
+        "YelpNYC9": ('data/node-level-anom/YelpNYC/YelpNYC.mat', 9),
+        "YelpRes7.5": ('data/node-level-anom/YelpRes/YelpRes.mat', 7.5),
     }
 
     for dataset_name, (file_path, threshold) in datasets.items():
-        evaluate_dataset(dataset_name, file_path, threshold, num_runs=1)
+        evaluate_dataset(dataset_name, file_path, threshold, num_runs=20)

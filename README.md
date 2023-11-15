@@ -1,7 +1,7 @@
 # Node Anomaly Detection project for SNACS
 This repository contains code for the Social Network Analysis for Computer Scientists (SNACS) 2023/2024 project at Leiden University. 
 For this project, we have used the CADA algorithm [1] to detect node anomalies in labelled real world networks. 
-Furthermore, we have implemented a third out-of-the-box community detection algorithm, namely the Label Propagation algorithm (LPA). 
+Furthermore, we have implemented a third and fourth out-of-the-box community detection algorithm, namely the Label Propagation algorithm (LPA), and the Leiden algorithm.
 
 
 The code in this repository is based on the code from the original CADA repository, which can be found [here](https://github.com/thomashelling/cada).
@@ -24,10 +24,12 @@ pip install -r requirements.txt
   - [x] Louvain (5, 3.5, 3.5, 3)
   - [x] Infomap (3.25, 1.75, 4.75, 2.75)
   - [x] LPA (1.25, 2.5, 1.5, 1.75)
+  - [x] Leiden (6.5, 7.25, 9, 7.5)
 - [x] Get results of (un)weighted F1 for CADA for the 4 datasets
   - [x] Louvain
   - [x] Infomap
   - [x] LPA
+  - [x] Leiden
 - [x] Add third community detection algorithm - LPA
 - [x] ~~Add weighted option --> not part of scope anymore~~
   - [x] ~~Louvain~~

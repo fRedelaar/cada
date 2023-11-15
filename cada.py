@@ -2,9 +2,11 @@ import numpy as np
 import community
 import infomap
 import networkx as nx
+import leidenalg as la
+import igraph as ig
 
 class cada():
-    def __init__(self, graph, algorithm='label_propagation', resolution=0.1):
+    def __init__(self, graph, algorithm='leiden', resolution=0.1):
         # First do community detection
         if algorithm == 'louvain':
             partition = community.best_partition(graph, resolution=resolution)
@@ -15,8 +17,11 @@ class cada():
         elif algorithm == 'label_propagation':
             partition = self.run_label_propagation(graph)
 
+        elif algorithm == 'leiden':
+            partition = self.run_leiden(graph, resolution=resolution)
+
         else:
-            raise ValueError("Invalid algorithm. Choose 'louvain', 'infomap', or 'label_propagation'.")
+            raise ValueError("Invalid algorithm. Choose 'louvain', 'infomap', 'label_propagation' or 'leiden'.")
 
         anom_score = {}
         for node in graph.nodes():
@@ -56,11 +61,22 @@ class cada():
 
     def run_label_propagation(self, graph):
         """
-        Runs Label Propagation Algorithm with NetworkX
+        Runs Label Propagation Algorithm with NetworkX package
         """
         partition = nx.algorithms.community.label_propagation.label_propagation_communities(graph)
         partition = {node: comm_index for comm_index, community in enumerate(partition) for node in community}
         return partition
+
+    def run_leiden(self, graph, resolution):
+        """
+        Runs Leiden Algorithm with leidenalg
+        """
+        if isinstance(graph, nx.Graph):
+            # Convert networkx graph to igraph
+            graph = ig.Graph.TupleList(graph.edges(), directed=False)
+
+        partition = la.find_partition(graph, la.ModularityVertexPartition)
+        return dict(zip(graph.vs.indices, partition.membership))
 
     def get_anomaly_scores(self, nr_anomalies=None):
         """
