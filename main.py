@@ -100,4 +100,4 @@ if __name__ == "__main__":
     }
 
     for dataset_name, (file_path, threshold) in datasets.items():
-        evaluate_dataset(dataset_name, file_path, threshold, num_runs=20)
+        evaluate_dataset(dataset_name, file_path, threshold, num_runs=3)
