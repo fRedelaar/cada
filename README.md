@@ -2,6 +2,7 @@
 This repository contains code for the Social Network Analysis for Computer Scientists (SNACS) 2023/2024 project at Leiden University. 
 For this project, we have used the CADA algorithm [1] to detect node anomalies in labelled real world networks. The CADA algorithm uses two out-of-the-box community detection algorithms, namely Louvain [2], and Infomap [3].
 For this project, we have forked the CADA algorithm and we have implemented a third and fourth out-of-the-box community detection algorithm, namely the Label Propagation algorithm (LPA) [4, 5], and the Leiden algorithm [6].
+Furthermore, we have used all CADA variants (Louvain, Infomap, LPA, Leiden) on labelled real-world datasets [7] found in the data directory in this repository. 
 
 
 The code in this repository is based on the code from the original CADA repository, which can be found [here](https://github.com/thomashelling/cada).
@@ -64,3 +65,4 @@ For Leiden, Python package <a href="https://pypi.org/project/leidenalg/">leidena
 
 [6]  Traag, V. A., Waltman, L., and van Eck, N. J. From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports 9, 1 (mar 2019)
 
+[7] Kaize Ding, Kai Shu, Xuan Shan, Jundong Li, and Huan Liu. 2022. Cross-Domain Graph Anomaly Detection. IEEE Transactions on Neural Networks and Learning Systems 33, 6 (2022), 2406–2415.
