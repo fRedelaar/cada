@@ -16,6 +16,7 @@ import infomap
 import networkx as nx
 import leidenalg as la
 import igraph as ig
+from statistics import mean
 
 class cada():
     def __init__(self, graph, algorithm='leiden', resolution=0.1):
@@ -33,7 +34,16 @@ class cada():
             partition = self.run_leiden(graph, resolution=resolution)
 
         else:
-            raise ValueError("Invalid algorithm. Choose 'louvain', 'infomap', 'label_propagation' or 'leiden'.")
+            raise ValueError("Invalid algorithm. Choose 'louvain', 'infomap', 'label_propagation' or 'leiden'.") 
+
+        self.community_ids = set(partition.values())
+        self.community_dict = {}
+        for com in self.community_ids:
+            com_list = []
+            for node in graph.nodes():
+                if partition[node] == com:
+                    com_list.append(node)
+            self.community_dict[com] = com_list
 
         anom_score = {}
         for node in graph.nodes():
@@ -51,7 +61,7 @@ class cada():
                 comms = comms / max_com
                 anom_score[node] = np.sum(comms)
 
-        self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]
+        self.anomaly_scores = sorted(anom_score.items(), key=lambda x: x[1])[::-1]        
 
     def run_infomap(self, graph):
         """
@@ -112,3 +122,24 @@ class cada():
         """
         anomalies = [anomaly[0] for anomaly in self.anomaly_scores if anomaly[1] > threshold]
         return anomalies
+    
+    def get_num_communities(self):
+        """
+        Returns the number of communities.
+        """
+        num_communities = len(self.community_ids)
+        return num_communities
+    
+    def get_total_biggest_com_size(self):
+        """
+        Returns the size of the biggest community.
+        """
+        biggest_community = max([len(x) for x in self.community_dict.values()])
+        return biggest_community
+    
+    def get_avg_com_size(self):
+        """
+        Returns the average size of communities.
+        """
+        avg_com_size = mean([len(x) for x in self.community_dict.values()])
+        return avg_com_size

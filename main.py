@@ -23,7 +23,7 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     mat_file_reader = MatFileReader(file_path)
     graph = mat_file_reader.get_graph()
 
-    # Calculate and display graph statistics
+    # # Calculate and display graph statistics
     graph_statistics = GraphStatistics(graph)
     graph_statistics.display_statistics(dataset_name)
 
@@ -33,10 +33,17 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     y_true = []  # True labels
     y_pred = []  # Predicted labels
 
+    total_num_communities = 0
+    total_biggest_com_size = 0
+    total_avg_com_size = 0
+
     for run in range(num_runs):
         # Perform community detection and anomaly detection
         cada_instance = cada(graph, algorithm='leiden', resolution=0.1)
         anomalies = cada_instance.get_anomalies_threshold(threshold=threshold)
+        total_num_communities += cada_instance.get_num_communities()
+        total_biggest_com_size += cada_instance.get_total_biggest_com_size()
+        total_avg_com_size += cada_instance.get_avg_com_size()
 
         # Get labeled nodes from dataset
         labeled_nodes = [node for node in graph.nodes if graph.nodes[node]['Label'] == 1]
@@ -89,6 +96,10 @@ def evaluate_dataset(dataset_name, file_path, threshold, num_runs):
     print(f"Weighted Recall: {weighted_recall:.2f}")
     print("------------------------------------------------------")
 
+    print(f"Avg number of communities: {total_num_communities/num_runs}")
+    print(f"Avg biggest community size: {total_biggest_com_size/num_runs}")
+    print(f"Avg avg community size: {total_avg_com_size/num_runs}")
+
 
 if __name__ == "__main__":
     datasets = {
@@ -100,4 +111,4 @@ if __name__ == "__main__":
     }
 
     for dataset_name, (file_path, threshold) in datasets.items():
-        evaluate_dataset(dataset_name, file_path, threshold, num_runs=3)
+        evaluate_dataset(dataset_name, file_path, threshold, num_runs=10)
