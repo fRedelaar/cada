@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ```
 
 ### Running the experiments
-Adjust the wanted CADA algorithm in main.py on line 38 and cada.py on line 15. Do not forget to adjust the thresholds accordingly to Table 1, in main.py lines 96-99. Run the experiments using the following command:
+Adjust the wanted CADA algorithm in `main.py` on line 42 and `cada.py` on line 22. Do not forget to adjust the thresholds accordingly to Table 1, in main.py lines 107-110. Run the experiments using the following command:
 
 ```
 python main.py
